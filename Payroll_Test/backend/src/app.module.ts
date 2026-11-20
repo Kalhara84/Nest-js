@@ -1,12 +1,27 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
-import { EmployeesModule } from './employees/employees.module.js';
-import { LookupsModule } from './lookups/lookups.module.js';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EmployeesModule } from './employees/employees.module';
+import { LookupsModule } from './lookups/lookups.module';
 
 @Module({
-  imports: [EmployeesModule, LookupsModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres' as const,
+        host: config.get<string>('DB_HOST'),
+        port: parseInt(config.get<string>('DB_PORT'), 10),
+        username: config.get<string>('DB_USER'),
+        password: config.get<string>('DB_PASSWORD'),
+        database: config.get<string>('DB_NAME'),
+        autoLoadEntities: true,
+        synchronize: false, // tables come from database/payroll_db.sql
+      }),
+    }),
+    EmployeesModule,
+    LookupsModule,
+  ],
 })
 export class AppModule {}
