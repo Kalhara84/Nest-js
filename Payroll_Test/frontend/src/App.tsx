@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
-import EmployeeList from './pages/EmployeeList';
-import EmployeeForm from './pages/EmployeeForm';
-import EmployeeView from './pages/EmployeeView';
+import EmployeeList from './page/EmployeeList';
+import EmployeeForm from './page/EmployeeForm';
+import EmployeeView from './page/EmployeeView';
 
 export default function App() {
   return (
