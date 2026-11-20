@@ -80,16 +80,23 @@ export default function EmployeeForm() {
   const lookups = useLookups();
 
   const [form, setForm] = useState<FormState>(emptyForm());
-  const [loading, setLoading] = useState(isEdit);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!isEdit) return;
-    api.get(Number(id))
-      .then((e) => setForm(fromEmployee(e)))
-      .catch((e) => setError(errorMessage(e)))
-      .finally(() => setLoading(false));
+    let active = true;
+    setLoading(true);
+    setError('');
+    // New employees use the next number from the API. Editing keeps the saved number.
+    const request = isEdit
+      ? api.get(Number(id)).then(fromEmployee)
+      : api.nextEmployeeNumber().then(({ empeno }) => ({ ...emptyForm(), empeno: String(empeno) }));
+    request
+      .then((values) => { if (active) setForm(values); })
+      .catch((e) => { if (active) setError(errorMessage(e)); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, [id, isEdit]);
 
   const set = (k: string, v: string) => setForm((p) => ({ ...p, [k]: v }));
@@ -168,7 +175,10 @@ export default function EmployeeForm() {
       {error && <div className="alert alert-danger py-2">{error}</div>}
 
       <Card icon="bi-person" title="Personal">
-        <Col label="Employee No *">{num('empeno')}</Col>
+        <Col label="Employee No *">
+          {/* The API supplies this number. Users cannot change it. */}
+          <input className="form-control" type="text" value={form.empeno ?? ''} readOnly />
+        </Col>
         <Col label="Initial">{text('empinital', { maxLength: 20 })}</Col>
         <Col label="Employee Name *">{text('empnam', { maxLength: 80 })}</Col>
         <Col label="Sex">{radios('empmof', [{ value: 'M', label: 'Male' }, { value: 'F', label: 'Female' }])}</Col>
