@@ -18,6 +18,12 @@ export class EmployeesController {
     return this.service.findAll(query);
   }
 
+  // GET /api/employees/next-number - suggest a number for a new employee.
+  @Get('next-number')
+  nextNumber() {
+    return this.service.nextNumber();
+  }
+
   // GET /api/employees/:id - get one employee. :id is the employee's empsno.
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {

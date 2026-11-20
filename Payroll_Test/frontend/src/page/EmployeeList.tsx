@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api, errorMessage } from '../api/client;
+import { api, errorMessage } from '../api/client';
 import ConfirmModal from '../components/ConfirmModal';
 import type { Employee, Paged } from '../types';
 

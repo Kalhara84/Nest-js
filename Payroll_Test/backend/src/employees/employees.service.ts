@@ -10,6 +10,15 @@ import { QueryEmployeeDto } from './dto/queryemp.dto.js';
 export class EmployeesService {
   constructor(@InjectRepository(Employee) private readonly repo: Repository<Employee>) {}
 
+  // Suggest the number after the highest employee number, or 1 for an empty table.
+  async nextNumber() {
+    const result = await this.repo
+      .createQueryBuilder('e')
+      .select('MAX(e.empeno)', 'max')
+      .getRawOne<{ max: number | null }>();
+    return { empeno: Number(result?.max ?? 0) + 1 };
+  }
+
   /** VIEW (list) - search + paging */
   async findAll(query: QueryEmployeeDto) {
     const page = query.page ?? 1;

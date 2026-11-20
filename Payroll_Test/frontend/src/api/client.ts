@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { Employee, Lookups, Paged } from '../types';
 
 const http = axios.create({
-  baseURL: import.meta.env.VITE_API_URL',
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 /** turn a Nest error response into one readable message */
@@ -17,6 +17,7 @@ export function errorMessage(err: unknown): string {
 }
 
 export const api = {
+  nextEmployeeNumber: () => http.get<{ empeno: number }>('/employees/next-number').then((r) => r.data),
   lookups: () => http.get<Lookups>('/lookups').then((r) => r.data),
   list: (search: string, page: number, limit = 10) =>
     http.get<Paged<Employee>>('/employees', { params: { search, page, limit } }).then((r) => r.data),
