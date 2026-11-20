@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmployeesModule } from './employees/employees.module';
-import { LookupsModule } from './lookups/lookups.module';
+import { EmployeesModule } from './employees/employee.entity.js';
+import { LookupsModule } from './lookups/lookup.entities.js';
 
 @Module({
   imports: [
