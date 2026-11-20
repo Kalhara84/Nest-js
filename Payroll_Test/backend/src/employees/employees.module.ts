@@ -6,6 +6,7 @@ import { EmployeesService } from './employees.service.js';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Employee])],
+  // Register the controller so Nest can handle its API routes.
   controllers: [EmployeesController],
   providers: [EmployeesService],
 })

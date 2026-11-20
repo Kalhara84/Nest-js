@@ -6,6 +6,7 @@ import { AreaMast, Department, Location, SysMast } from './lookup.entities.js';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Location, Department, SysMast, AreaMast])],
+  // Register the controller so Nest can handle its API routes.
   controllers: [LookupsController],
   providers: [LookupsService],
 })
